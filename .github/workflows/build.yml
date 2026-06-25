@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Merakit APK
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04 # Menggunakan server yang sedikit lebih stabil untuk aplikasi jadul
 
     steps:
       - name: Ambil Source Code
@@ -17,6 +17,12 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: '11'
+
+      - name: Siapkan NDK Versi Lama (Untuk Core Linux)
+        uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r21e
+          link-to-sdk: true
 
       - name: Beri Akses Gradle
         run: chmod +x ./gradlew
