@@ -1,7 +1,7 @@
 name: Buat APK Kali Linux
 
 on:
-  workflow_dispatch: # Ini memunculkan tombol "Run workflow" agar bisa diklik manual
+  workflow_dispatch: 
 
 jobs:
   build:
@@ -10,7 +10,7 @@ jobs:
 
     steps:
       - name: Ambil Source Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Siapkan Java (Bahan Wajib Android)
         uses: actions/setup-java@v4
@@ -25,7 +25,7 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Simpan dan Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Aplikasi-Kali-Linux-Mobile
           path: app/build/outputs/apk/debug/*.apk
