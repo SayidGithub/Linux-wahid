@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Merakit APK
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
       - name: Ambil Source Code
@@ -18,23 +18,19 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Hapus NDK Bawaan yang Bikin Bentrok
-        run: sudo rm -rf /usr/local/lib/android/sdk/ndk/*
-
       - name: Siapkan NDK Versi Lama
+        id: setup-ndk
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r21e
-          link-to-sdk: true
-
-      - name: Paksa Sistem Pakai NDK yang Benar
-        run: echo "ndk.dir=$ANDROID_NDK_HOME" > local.properties
 
       - name: Beri Akses Gradle
         run: chmod +x ./gradlew
 
-      - name: Mulai Merakit APK
-        run: ./gradlew assembleDebug
+      - name: Mulai Merakit APK (Paksa Jalur NDK)
+        env:
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+        run: ./gradlew assembleDebug -Pandroid.ndkPath=${{ steps.setup-ndk.outputs.ndk-path }}
 
       - name: Simpan dan Upload APK
         uses: actions/upload-artifact@v4
