@@ -1,0 +1,31 @@
+name: Buat APK Kali Linux
+
+on:
+  workflow_dispatch: # Ini memunculkan tombol "Run workflow" agar bisa diklik manual
+
+jobs:
+  build:
+    name: Merakit APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ambil Source Code
+        uses: actions/checkout@v3
+
+      - name: Siapkan Java (Bahan Wajib Android)
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Beri Akses Gradle
+        run: chmod +x ./gradlew
+
+      - name: Mulai Merakit APK
+        run: ./gradlew assembleDebug
+
+      - name: Simpan dan Upload APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: Aplikasi-Kali-Linux-Mobile
+          path: app/build/outputs/apk/debug/*.apk
