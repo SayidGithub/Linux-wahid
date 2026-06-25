@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     name: Merakit APK
-    runs-on: ubuntu-22.04 # Menggunakan server yang sedikit lebih stabil untuk aplikasi jadul
+    runs-on: ubuntu-22.04
 
     steps:
       - name: Ambil Source Code
@@ -18,11 +18,17 @@ jobs:
           distribution: 'zulu'
           java-version: '11'
 
-      - name: Siapkan NDK Versi Lama (Untuk Core Linux)
+      - name: Hapus NDK Bawaan yang Bikin Bentrok
+        run: sudo rm -rf /usr/local/lib/android/sdk/ndk/*
+
+      - name: Siapkan NDK Versi Lama
         uses: nttld/setup-ndk@v1
         with:
           ndk-version: r21e
           link-to-sdk: true
+
+      - name: Paksa Sistem Pakai NDK yang Benar
+        run: echo "ndk.dir=$ANDROID_NDK_HOME" > local.properties
 
       - name: Beri Akses Gradle
         run: chmod +x ./gradlew
